@@ -35,12 +35,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zulip/zulip-js.git"
+    "url": "git+https://github.com/ky28059/zulip-js.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zulip/zulip-js/issues"
+    "url": "https://github.com/ky28059/zulip-js/issues"
   },
-  "homepage": "https://github.com/zulip/zulip-js#readme"
+  "homepage": "https://github.com/ky28059/zulip-js#readme"
 }
