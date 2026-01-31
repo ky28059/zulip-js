@@ -1,13 +1,11 @@
-const helper = require('../helper');
-
 function accounts(config) {
   return {
     retrieve: async () => {
       const url = `${config.apiURL}/fetch_api_key`;
-      const form = new helper.FormData();
+      const form = new FormData();
       form.append('username', config.username);
       form.append('password', config.password);
-      const res = await helper.fetch(url, {
+      const res = await fetch(url, {
         method: 'POST',
         body: form,
       });

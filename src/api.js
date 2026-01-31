@@ -1,5 +1,3 @@
-const helper = require('./helper');
-
 async function api(baseUrl, config, method, params) {
   const url = new URL(baseUrl);
   const auth = Buffer.from(`${config.username}:${config.apiKey}`).toString(
@@ -8,7 +6,7 @@ async function api(baseUrl, config, method, params) {
   const authHeader = `Basic ${auth}`;
   const options = { method, headers: { Authorization: authHeader } };
   if (method === 'POST') {
-    options.body = new helper.FormData();
+    options.body = new FormData();
     Object.keys(params).forEach((key) => {
       let data = params[key];
       if (Array.isArray(data)) {
@@ -21,7 +19,7 @@ async function api(baseUrl, config, method, params) {
       url.searchParams.append(key, value);
     });
   }
-  const response = await helper.fetch(url.href, options);
+  const response = await fetch(url.href, options);
   try {
     return response.json();
   } catch (e) {

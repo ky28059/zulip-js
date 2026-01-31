@@ -1,5 +1,4 @@
 const sinon = require('sinon');
-const helper = require('../lib/helper');
 
 const getFakes = (validator, output) => {
   const fetch = (url, options) => {
@@ -33,8 +32,8 @@ const sandbox = sinon.createSandbox();
 
 const stubNetwork = (validator, output) => {
   const fakes = getFakes(validator, output);
-  sandbox.stub(helper, 'fetch').callsFake(fakes.fetch);
-  sandbox.stub(helper, 'FormData').callsFake(fakes.FormData);
+  sandbox.stub(globalThis, 'fetch').callsFake(fakes.fetch);
+  sandbox.stub(globalThis, 'FormData').callsFake(fakes.FormData);
 };
 
 afterEach(() => {
