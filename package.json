@@ -1,5 +1,5 @@
 {
-  "name": "zulip-js",
+  "name": "@ky28059/zulip-js",
   "version": "2.0.9",
   "description": "Javascript library to access the Zulip API",
   "main": "lib/index.js",
