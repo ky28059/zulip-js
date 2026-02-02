@@ -20,12 +20,8 @@ interface DeregisterQueuesParams {
 
 export default function queues(config: ZulipRC) {
   return {
-    register: (initialParams: RegisterQueuesParams) => {
+    register: (params: RegisterQueuesParams) => {
       const url = `${config.apiURL}/register`;
-      const params = { ...initialParams };
-      if (params.event_types) {
-        params.event_types = JSON.stringify(params.event_types);
-      }
       return api(url, config, 'POST', params);
     },
     deregister: (params: DeregisterQueuesParams) => {
