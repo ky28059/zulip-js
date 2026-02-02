@@ -1,15 +1,19 @@
 import type { ZulipRC } from '../zuliprc';
 import api from '../api';
 
+export interface TypingParams {
+  type?: 'direct' | 'stream' | 'channel',
+  op: 'start' | 'stop',
+  to?: number[],
+  stream_id?: number,
+  topic?: string
+}
+
 export default function typing(config: ZulipRC) {
   return {
-    send: (initialParams: any) => {
+    send: (params: TypingParams) => {
       const url = `${config.apiURL}/typing`;
-      const params = { ...initialParams };
-      if (params.to.length > 1) {
-        params.to = JSON.stringify(params.to);
-      }
-      return api(url, config, 'POST', params);
+      return api<{}>(url, config, 'POST', params);
     },
   };
 }
