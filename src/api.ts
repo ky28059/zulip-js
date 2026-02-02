@@ -2,12 +2,24 @@ import type { ZulipRC } from './zuliprc';
 
 type HttpMethod = 'GET' | 'POST' | 'DELETE' | 'PATCH';
 
-async function api(
+type ZulipSuccess<T extends object> = T & {
+  result: 'success',
+  msg: string,
+  ignored_parameters_unsupported?: string[]
+}
+
+type ZulipError<T extends object> = T & {
+  result: 'error',
+  msg: string,
+  code: string // TODO?
+}
+
+async function api<T extends object>(
   baseUrl: string,
   config: ZulipRC,
   method: HttpMethod,
   params?: Record<string, any>,
-): Promise<any> {
+): Promise<ZulipSuccess<T> | ZulipError<T>> {
   const url = new URL(baseUrl);
   const auth = Buffer.from(`${config.username}:${config.apiKey}`).toString(
     'base64',

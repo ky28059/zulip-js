@@ -20,33 +20,26 @@ export interface RegisterQueueResponse {
   zulip_feature_level: number,
   zulip_version: string,
   zulip_merge_base?: string, // new?
-  result: string,
-  msg: string,
   [key: string]: any // TODO: fields depend on fetch_event_types
 }
 
 export interface DeregisterQueueParams {
-  queue_id: string;
+  queue_id: string
 }
 
 export interface DeregisterQueueResponse {
-  // TODO
-  msg: string,
-  result: string,
-
-  code?: string,
-  queue_id?: string
+  queue_id?: string // TODO
 }
 
 export default function queues(config: ZulipRC) {
   return {
-    register: (params: RegisterQueueParams): Promise<RegisterQueueResponse> => {
+    register: (params: RegisterQueueParams) => {
       const url = `${config.apiURL}/register`;
-      return api(url, config, 'POST', params);
+      return api<RegisterQueueResponse>(url, config, 'POST', params);
     },
-    deregister: (params: DeregisterQueueParams): Promise<DeregisterQueueResponse> => {
+    deregister: (params: DeregisterQueueParams) => {
       const url = `${config.apiURL}/events`;
-      return api(url, config, 'DELETE', params);
+      return api<DeregisterQueueResponse>(url, config, 'DELETE', params);
     },
   };
 }

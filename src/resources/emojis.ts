@@ -11,18 +11,14 @@ export interface EmojiDetail {
 }
 
 export interface RetrieveEmojisResponse {
-  emoji: Record<string, EmojiDetail>,
-
-  // TODO
-  msg: string,
-  result: string,
+  emoji: Record<string, EmojiDetail>
 }
 
 export default function emojis(config: ZulipRC) {
   return {
-    retrieve: (): Promise<RetrieveEmojisResponse> => {
+    retrieve: () => {
       const url = `${config.apiURL}/realm/emoji`;
-      return api(url, config, 'GET');
+      return api<RetrieveEmojisResponse>(url, config, 'GET');
     },
   };
 }

@@ -36,17 +36,13 @@ export interface ServerSettingsResponse {
   realm_icon: string,
   realm_description: string,
   realm_web_public_access_enabled?: boolean, // new?
-
-  // TODO?
-  result: string,
-  msg: string,
 }
 
 export default function server(config: ZulipRC) {
   return {
-    settings: (): Promise<ServerSettingsResponse> => {
+    settings: () => {
       const url = `${config.apiURL}/server_settings`;
-      return api(url, config, 'GET');
+      return api<ServerSettingsResponse>(url, config, 'GET');
     },
   };
 }
