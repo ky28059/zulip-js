@@ -1,8 +1,9 @@
-const api = require('../api');
+import type { ZulipRC } from '../zuliprc';
+import api from '../api';
 
-function typing(config) {
+export default function typing(config: ZulipRC) {
   return {
-    send: (initialParams) => {
+    send: (initialParams: any) => {
       const url = `${config.apiURL}/typing`;
       const params = { ...initialParams };
       if (params.to.length > 1) {
@@ -12,5 +13,3 @@ function typing(config) {
     },
   };
 }
-
-module.exports = typing;

@@ -1,22 +1,23 @@
-const api = require('../api');
+import type { ZulipRC } from '../zuliprc';
+import api from '../api';
 
-function users(config) {
+export default function users(config: ZulipRC) {
   return {
-    retrieve: (params) => {
+    retrieve: (params: any) => {
       const url = `${config.apiURL}/users`;
       return api(url, config, 'GET', params);
     },
-    create: (params) => {
+    create: (params: any) => {
       const url = `${config.apiURL}/users`;
       return api(url, config, 'POST', params);
     },
     me: {
       pointer: {
-        retrieve: (params) => {
+        retrieve: (params: any) => {
           const url = `${config.apiURL}/users/me/pointer`;
           return api(url, config, 'GET', params);
         },
-        update: (id) => {
+        update: (id: number) => {
           const url = `${config.apiURL}/users/me/pointer`;
           return api(url, config, 'POST', { pointer: id });
         },
@@ -26,17 +27,17 @@ function users(config) {
         return api(url, config, 'GET');
       },
       subscriptions: {
-        add: (params) => {
+        add: (params: any) => {
           const url = `${config.apiURL}/users/me/subscriptions`;
           return api(url, config, 'POST', params);
         },
-        remove: (params) => {
+        remove: (params: any) => {
           const url = `${config.apiURL}/users/me/subscriptions`;
           return api(url, config, 'DELETE', params);
         },
       },
       alertWords: {
-        retrieve: (params) => {
+        retrieve: (params: any) => {
           const url = `${config.apiURL}/users/me/alert_words`;
           return api(url, config, 'GET', params);
         },
@@ -44,5 +45,3 @@ function users(config) {
     },
   };
 }
-
-module.exports = users;

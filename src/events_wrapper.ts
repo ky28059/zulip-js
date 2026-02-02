@@ -1,23 +1,24 @@
-const queues = require('./resources/queues');
-const events = require('./resources/events');
+import type { ZulipRC } from './zuliprc';
+import queues from './resources/queues';
+import events from './resources/events';
 
-function sleep(ms) {
+function sleep(ms: number) {
   // TODO add jitter.
   // eslint-disable-next-line no-promise-executor-return
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function eventsWrapper(config) {
+export default function eventsWrapper(config: ZulipRC) {
   const z = {
     queues: queues(config),
     events: events(config),
   };
 
-  function logError(error) {
+  function logError(error: any) {
     console.log('zulip-js: Error while communicating with server:', error); // eslint-disable-line no-console
   }
 
-  async function registerQueue(eventTypes = null) {
+  async function registerQueue(eventTypes: string[] | null = null): Promise<{ queueId: string; lastEventId: number }> {
     let res;
     // eslint-disable-next-line no-constant-condition
     while (true) {
@@ -39,10 +40,13 @@ function eventsWrapper(config) {
     }
   }
 
-  async function callOnEachEvent(callback, eventTypes = null) {
-    let queueId = null;
+  async function callOnEachEvent(
+    callback: (event: any) => void,
+    eventTypes: string[] | null = null,
+  ) {
+    let queueId: string | null = null;
     let lastEventId = -1;
-    const handleEvent = (event) => {
+    const handleEvent = (event: any) => {
       lastEventId = Math.max(lastEventId, event.id);
       callback(event);
     };
@@ -72,5 +76,3 @@ function eventsWrapper(config) {
 
   return callOnEachEvent;
 }
-
-module.exports = eventsWrapper;

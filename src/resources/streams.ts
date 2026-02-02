@@ -1,12 +1,13 @@
-const api = require('../api');
+import type { ZulipRC } from '../zuliprc';
+import api from '../api';
 
-function streams(config) {
+export default function streams(config: ZulipRC) {
   return {
-    retrieve: (params) => {
+    retrieve: (params: any) => {
       const url = `${config.apiURL}/streams`;
       return api(url, config, 'GET', params);
     },
-    getStreamId: (initialParams) => {
+    getStreamId: (initialParams: any) => {
       const url = `${config.apiURL}/get_stream_id`;
       let params = { ...initialParams };
       if (typeof initialParams === 'string') {
@@ -17,22 +18,20 @@ function streams(config) {
       return api(url, config, 'GET', params);
     },
     subscriptions: {
-      retrieve: (params) => {
+      retrieve: (params: any) => {
         const url = `${config.apiURL}/users/me/subscriptions`;
         return api(url, config, 'GET', params);
       },
     },
     topics: {
-      retrieve: (params) => {
+      retrieve: (params: any) => {
         const url = `${config.apiURL}/users/me/${params.stream_id}/topics`;
         return api(url, config, 'GET');
       },
     },
-    deleteById: (params) => {
+    deleteById: (params: any) => {
       const url = `${config.apiURL}/streams/${params.stream_id}`;
       return api(url, config, 'DELETE', params);
     },
   };
 }
-
-module.exports = streams;

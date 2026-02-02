@@ -1,10 +1,11 @@
-const api = require('../api');
+import type { ZulipRC } from '../zuliprc';
+import api from '../api';
 
-function messages(config) {
+export default function messages(config: ZulipRC) {
   const baseURL = `${config.apiURL}/messages`;
   const flagsURL = `${baseURL}/flags`;
   return {
-    retrieve: (initialParams) => {
+    retrieve: (initialParams: any) => {
       const url = `${config.apiURL}/messages`;
       const params = { ...initialParams };
       if (params.narrow) {
@@ -12,11 +13,11 @@ function messages(config) {
       }
       return api(url, config, 'GET', params);
     },
-    send: (params) => {
+    send: (params: any) => {
       const url = `${config.apiURL}/messages`;
       return api(url, config, 'POST', params);
     },
-    render: (initialParams) => {
+    render: (initialParams: any) => {
       const url = `${config.apiURL}/messages/render`;
       let params = { ...initialParams };
       if (typeof initialParams === 'string') {
@@ -26,12 +27,12 @@ function messages(config) {
       }
       return api(url, config, 'POST', params);
     },
-    update: (params) => {
+    update: (params: any) => {
       const url = `${config.apiURL}/messages/${params.message_id}`;
       return api(url, config, 'PATCH', params);
     },
     flags: {
-      add: (initialParams) => {
+      add: (initialParams: any) => {
         // params.flag can be one of 'read', 'starred', 'mentioned',
         // 'wildcard_mentioned', 'has_alert_word', 'historical',
         const params = { ...initialParams };
@@ -41,7 +42,7 @@ function messages(config) {
         }
         return api(flagsURL, config, 'POST', params);
       },
-      remove: (initialParams) => {
+      remove: (initialParams: any) => {
         // params.flag can be one of 'read', 'starred', 'mentioned',
         // 'wildcard_mentioned', 'has_alert_word', 'historical',
         const params = { ...initialParams };
@@ -52,23 +53,21 @@ function messages(config) {
         return api(flagsURL, config, 'POST', params);
       },
     },
-    getById: (params) => {
+    getById: (params: any) => {
       const url = `${config.apiURL}/messages/${params.message_id}`;
       return api(url, config, 'GET', params);
     },
-    getHistoryById: (params) => {
+    getHistoryById: (params: any) => {
       const url = `${config.apiURL}/messages/${params.message_id}/history`;
       return api(url, config, 'GET', params);
     },
-    deleteReactionById: (params) => {
+    deleteReactionById: (params: any) => {
       const url = `${config.apiURL}/messages/${params.message_id}/reactions`;
       return api(url, config, 'DELETE', params);
     },
-    deleteById: (params) => {
+    deleteById: (params: any) => {
       const url = `${config.apiURL}/messages/${params.message_id}`;
       return api(url, config, 'DELETE', params);
     },
   };
 }
-
-module.exports = messages;
