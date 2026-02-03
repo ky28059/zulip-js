@@ -46,10 +46,6 @@ export interface CreateUserResponse {
   user_id: number
 }
 
-export interface PointerResponse {
-  pointer: number;
-} // TODO
-
 export interface AddSubscriptionParams {
   subscriptions: { name: string, description?: string }[],
   principals?: string[] | number[],
@@ -108,16 +104,6 @@ export default function users(config: ZulipRC) {
       return api<CreateUserResponse>(url, config, 'POST', params);
     },
     me: {
-      pointer: { // TODO: deleted in modern zulip?
-        retrieve: (params: Record<string, any> = {}) => {
-          const url = `${config.apiURL}/users/me/pointer`;
-          return api<PointerResponse>(url, config, 'GET', params);
-        },
-        update: (id: number) => {
-          const url = `${config.apiURL}/users/me/pointer`;
-          return api<{}>(url, config, 'POST', { pointer: id });
-        },
-      },
       getProfile: () => {
         const url = `${config.apiURL}/users/me`;
         return api<User & { max_message_id: number }>(url, config, 'GET'); // TODO?
