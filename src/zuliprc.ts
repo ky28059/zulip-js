@@ -2,10 +2,10 @@ import { readFile } from 'fs/promises';
 import { parse } from 'ini';
 
 export interface ZulipRC {
-  realm: string;
-  username: string;
-  apiKey: string;
-  apiURL: string;
+  realm: string,
+  username: string,
+  apiKey: string,
+  apiURL: string
 }
 
 export default async function parseConfigFile(filename: string): Promise<ZulipRC> {

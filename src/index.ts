@@ -13,21 +13,19 @@ import typing from './resources/typing';
 import reactions from './resources/reactions';
 import server from './resources/server';
 import filters from './resources/filters';
-import eventsWapper from './events_wrapper';
+import eventsWrapper from './events_wrapper';
 
 function getCallEndpoint(config: ZulipRC) {
   return function callEndpoint(
     endpoint: string,
     method: 'GET' | 'POST' | 'DELETE' | 'PATCH' = 'GET',
-    params = {},
+    params?: Record<string, any>,
   ): Promise<any> {
-    const myConfig = { ...config };
-    let finalendpoint = endpoint;
-    if (!endpoint.startsWith('/')) {
-      finalendpoint = `/${endpoint}`;
-    }
-    const url = myConfig.apiURL + finalendpoint;
-    return api(url, myConfig, method, params);
+    const url = endpoint.startsWith('/')
+      ? `${config.apiURL}${endpoint}`
+      : `${config.apiURL}/${endpoint}`;
+
+    return api(url, config, method, params);
   };
 }
 
@@ -46,7 +44,7 @@ function resources(config: ZulipRC) {
     reactions: reactions(config),
     server: server(config),
     filters: filters(config),
-    callOnEachEvent: eventsWapper(config),
+    callOnEachEvent: eventsWrapper(config),
   };
 }
 

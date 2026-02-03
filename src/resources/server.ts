@@ -1,6 +1,7 @@
 import type { ZulipRC } from '../zuliprc';
 import api from '../api';
 
+// {@Link https://zulip.com/api/get-server-settings}
 export interface ServerSettingsResponse {
   authentication_methods: {
     password: boolean,
@@ -35,7 +36,7 @@ export interface ServerSettingsResponse {
   realm_name: string,
   realm_icon: string,
   realm_description: string,
-  realm_web_public_access_enabled?: boolean, // new?
+  realm_web_public_access_enabled: boolean
 }
 
 export default function server(config: ZulipRC) {
