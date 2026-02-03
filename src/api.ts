@@ -8,7 +8,7 @@ type ZulipSuccess<T extends object> = T & {
   ignored_parameters_unsupported?: string[]
 }
 
-type ZulipError<T extends object> = T & {
+type ZulipError = {
   result: 'error',
   msg: string,
   code: string // TODO?
@@ -19,7 +19,7 @@ async function api<T extends object>(
   config: ZulipRC,
   method: HttpMethod,
   params?: Record<string, any>,
-): Promise<ZulipSuccess<T> | ZulipError<T>> {
+): Promise<ZulipSuccess<T> | ZulipError> {
   const url = new URL(baseUrl);
   const auth = Buffer.from(`${config.username}:${config.apiKey}`).toString(
     'base64',

@@ -1,4 +1,5 @@
 import type { ZulipRC } from './zuliprc';
+import type { ZulipEvent } from './types/events';
 import queues from './resources/queues';
 import events from './resources/events';
 
@@ -18,7 +19,7 @@ export default function eventsWrapper(config: ZulipRC) {
     console.log('zulip-js: Error while communicating with server:', error); // eslint-disable-line no-console
   }
 
-  async function registerQueue(eventTypes: string[] | null = null): Promise<{ queueId: string; lastEventId: number }> {
+  async function registerQueue(eventTypes?: string[]): Promise<{ queueId: string | null, lastEventId: number }> {
     let res;
     // eslint-disable-next-line no-constant-condition
     while (true) {
@@ -41,12 +42,12 @@ export default function eventsWrapper(config: ZulipRC) {
   }
 
   async function callOnEachEvent(
-    callback: (event: any) => void,
-    eventTypes: string[] | null = null,
+    callback: (event: ZulipEvent) => void,
+    eventTypes?: string[],
   ) {
     let queueId: string | null = null;
     let lastEventId = -1;
-    const handleEvent = (event: any) => {
+    const handleEvent = (event: ZulipEvent) => {
       lastEventId = Math.max(lastEventId, event.id);
       callback(event);
     };
@@ -64,7 +65,7 @@ export default function eventsWrapper(config: ZulipRC) {
           last_event_id: lastEventId,
           dont_block: false,
         });
-        if (res.events) {
+        if ('events' in res) {
           res.events.forEach(handleEvent);
         }
       } catch (e) {
