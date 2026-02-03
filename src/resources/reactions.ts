@@ -1,18 +1,19 @@
 import type { ZulipRC } from '../zuliprc';
+import type { ReactionType } from '../types/reactions';
 import api from '../api';
 
 export interface AddReactionParams {
   message_id: number,
   emoji_name: string,
   emoji_code?: string,
-  reaction_type?: 'unicode_emoji' | 'realm_emoji' | 'zulip_extra_emoji'
+  reaction_type?: ReactionType
 }
 
 export interface RemoveReactionParams {
   message_id: number,
   emoji_name?: string,
   emoji_code?: string,
-  reaction_type?: 'unicode_emoji' | 'realm_emoji' | 'zulip_extra_emoji'
+  reaction_type?: ReactionType
 }
 
 export default function reactions(config: ZulipRC) {

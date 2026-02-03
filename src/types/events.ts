@@ -153,7 +153,6 @@ export interface MutedTopicsEvent extends EventBase {
   type: 'muted_topics',
   muted_topics: [channel: string, topic: string, ts: number][]
 }
-// ------
 
 export interface MutedUsersEvent extends EventBase {
   type: 'muted_users',
@@ -163,8 +162,13 @@ export interface MutedUsersEvent extends EventBase {
 export interface NavigationViewAddEvent extends EventBase {
   type: 'navigation_view',
   op: 'add',
-  [key: string]: any
+  navigation_view: {
+    fragment: string,
+    is_pinned: boolean,
+    name: string | null
+  }
 }
+// ------
 
 export interface NavigationViewRemoveEvent extends EventBase {
   type: 'navigation_view',
