@@ -5,7 +5,7 @@ export enum BotType {
   Embedded = 4
 }
 
-export enum UserRole { // TODO: test on real API
+export enum UserRole {
   Owner = 100,
   Administrator = 200,
   Moderator = 300,
