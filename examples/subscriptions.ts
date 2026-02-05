@@ -1,10 +1,10 @@
-const config = {
-  username: process.env.ZULIP_USERNAME,
-  apiKey: process.env.ZULIP_API_KEY,
-  realm: process.env.ZULIP_REALM,
-};
+import zulip from '../lib';
 
-const zulip = require('../lib');
+const config = {
+  username: process.env.ZULIP_USERNAME!,
+  apiKey: process.env.ZULIP_API_KEY!,
+  realm: process.env.ZULIP_REALM!,
+};
 
 (async () => {
   const z = await zulip(config);
@@ -17,7 +17,7 @@ const zulip = require('../lib');
 
   console.log(
     await z.users.me.subscriptions.add({
-      subscriptions: JSON.stringify([{ name: 'off topic' }]),
+      subscriptions: [{ name: 'off topic' }],
     }),
   );
 })();

@@ -1,18 +1,39 @@
-async function api(baseUrl, config, method, params) {
+import type { ZulipRC } from './zuliprc';
+
+type HttpMethod = 'GET' | 'POST' | 'DELETE' | 'PATCH';
+
+type ZulipSuccess<T extends object> = T & {
+  result: 'success',
+  msg: string,
+  ignored_parameters_unsupported?: string[]
+}
+
+type ZulipError = {
+  result: 'error',
+  msg: string,
+  code: string // TODO?
+}
+
+async function api<T extends object>(
+  baseUrl: string,
+  config: ZulipRC,
+  method: HttpMethod,
+  params?: Record<string, any>,
+): Promise<ZulipSuccess<T> | ZulipError> {
   const url = new URL(baseUrl);
   const auth = Buffer.from(`${config.username}:${config.apiKey}`).toString(
     'base64',
   );
   const authHeader = `Basic ${auth}`;
-  const options = { method, headers: { Authorization: authHeader } };
-  if (method === 'POST') {
+  const options: RequestInit = { method, headers: { Authorization: authHeader } };
+  if (method === 'POST' || method === 'PATCH') {
     options.body = new FormData();
-    Object.keys(params).forEach((key) => {
-      let data = params[key];
+    Object.keys(params!).forEach((key) => {
+      let data = params![key];
       if (Array.isArray(data)) {
         data = JSON.stringify(data);
       }
-      options.body.append(key, data);
+      (options.body as FormData).append(key, data);
     });
   } else if (params) {
     Object.entries(params).forEach(([key, value]) => {
@@ -21,7 +42,7 @@ async function api(baseUrl, config, method, params) {
   }
   const response = await fetch(url.href, options);
   try {
-    return response.json();
+    return await response.json();
   } catch (e) {
     if (e instanceof SyntaxError) {
       // We probably got a non-JSON response from the server.
@@ -35,7 +56,7 @@ async function api(baseUrl, config, method, params) {
       } else {
         message += ' Please check the API documentation.';
       }
-      const error = new Error(message);
+      const error: any = new Error(message);
       error.res = response;
       throw error;
     }
@@ -43,4 +64,4 @@ async function api(baseUrl, config, method, params) {
   }
 }
 
-module.exports = api;
+export default api;

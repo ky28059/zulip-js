@@ -1,6 +1,8 @@
-const path = require('path');
-const homedir = require('os').homedir();
-const zulip = require('../lib');
+import path from 'path';
+import os from 'os';
+import zulip from '../lib';
+
+const homedir = os.homedir();
 
 if (process.argv[2] === 'help') {
   console.log('This is a helper script to test Zulip APIs.');
@@ -21,5 +23,5 @@ const zuliprc = process.argv[5]
 
 (async () => {
   const z = await zulip({ zuliprc });
-  console.log(await z.callEndpoint(endpoint, method, params));
+  console.log(await z.callEndpoint(endpoint, method as 'GET' | 'POST' | 'DELETE' | 'PATCH', params));
 })();

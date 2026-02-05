@@ -1,5 +1,5 @@
-const path = require('path');
-const zulip = require('../lib');
+import path from 'path';
+import zulip from '../lib';
 
 (async () => {
   // Initialization with zuliprc
@@ -11,9 +11,9 @@ const zulip = require('../lib');
 
   // Initialization with username & API key
   const config = {
-    username: process.env.ZULIP_USERNAME,
-    apiKey: process.env.ZULIP_API_KEY,
-    realm: process.env.ZULIP_REALM,
+    username: process.env.ZULIP_USERNAME!,
+    apiKey: process.env.ZULIP_API_KEY!,
+    realm: process.env.ZULIP_REALM!,
   };
   z = await zulip(config);
   // The zulip object now contains the API key

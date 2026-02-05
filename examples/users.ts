@@ -1,9 +1,9 @@
-const zulip = require('../lib');
+import zulip from '../lib';
 
 const config = {
-  username: process.env.ZULIP_USERNAME,
-  apiKey: process.env.ZULIP_API_KEY,
-  realm: process.env.ZULIP_REALM,
+  username: process.env.ZULIP_USERNAME!,
+  apiKey: process.env.ZULIP_API_KEY!,
+  realm: process.env.ZULIP_REALM!,
 };
 
 (async () => {
@@ -28,8 +28,7 @@ const config = {
     await z.users.create({
       email: 'newbie@zulip.com',
       password: 'temp',
-      full_name: 'New User',
-      short_name: 'newbie',
+      full_name: 'New User'
     }),
   );
 
@@ -51,18 +50,9 @@ const config = {
   // Unsubscribe from the stream Verona
   console.log(
     await z.users.me.subscriptions.remove({
-      subscriptions: JSON.stringify(['Verona']),
+      subscriptions: ['Verona'],
     }),
   );
-
-  // Get pointer for user
-  const resp = await z.users.me.pointer.retrieve();
-  // Prints
-  // { msg: '', pointer: 3432741029383298, result: 'success' }
-  console.log(resp);
-  // Update pointer for user (has the side effect of marking some messages as read)
-  // Prints success if the message id is valid
-  console.log(await z.users.me.pointer.update(resp.pointer + 1));
 
   console.log(await z.users.me.alertWords.retrieve());
 })();
