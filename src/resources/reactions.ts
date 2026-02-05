@@ -2,6 +2,7 @@ import type { ZulipRC } from '../zuliprc';
 import type { ReactionType } from '../types/reactions';
 import api from '../api';
 
+// {@Link https://zulip.com/api/add-reaction}
 export interface AddReactionParams {
   message_id: number,
   emoji_name: string,
@@ -9,6 +10,7 @@ export interface AddReactionParams {
   reaction_type?: ReactionType
 }
 
+// {@Link https://zulip.com/api/remove-reaction}
 export interface RemoveReactionParams {
   message_id: number,
   emoji_name?: string,

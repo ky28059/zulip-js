@@ -1,16 +1,11 @@
 import type { ZulipRC } from '../zuliprc';
+import type { ZulipEvent } from '../types/events';
 import api from '../api';
 
 export interface RetrieveEventsParams {
   queue_id: string,
   last_event_id?: number,
   dont_block?: boolean
-}
-
-export interface ZulipEvent {
-  id: number,
-  type: string,
-  [key: string]: any // TODO: add event types
 }
 
 export interface RetrieveEventsResponse {

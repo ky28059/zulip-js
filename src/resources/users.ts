@@ -23,6 +23,7 @@ export interface CreateUserResponse {
   user_id: number
 }
 
+// {@Link https://zulip.com/api/subscribe}
 export interface AddSubscriptionParams {
   subscriptions: { name: string, description?: string }[],
   principals?: string[] | number[],

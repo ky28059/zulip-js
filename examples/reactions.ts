@@ -1,9 +1,9 @@
-const zulip = require('../lib');
+import zulip from '../lib';
 
 const config = {
-  username: process.env.ZULIP_USERNAME,
-  apiKey: process.env.ZULIP_API_KEY,
-  realm: process.env.ZULIP_REALM,
+  username: process.env.ZULIP_USERNAME!,
+  apiKey: process.env.ZULIP_API_KEY!,
+  realm: process.env.ZULIP_REALM!,
 };
 
 (async () => {
@@ -13,7 +13,7 @@ const config = {
     message_id: 1,
     emoji_name: 'musical_note',
     emoji_code: '1f3b5',
-    reaction_type: 'unicode_emoji',
+    reaction_type: 'unicode_emoji' as const,
   };
 
   console.log(await z.reactions.add(params));
