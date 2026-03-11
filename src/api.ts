@@ -2,7 +2,7 @@ import type { ZulipRC } from './zuliprc';
 
 type HttpMethod = 'GET' | 'POST' | 'DELETE' | 'PATCH';
 
-type ZulipSuccess<T extends object> = T & {
+export type ZulipSuccess<T extends object> = T & {
   result: 'success',
   msg: string,
   ignored_parameters_unsupported?: string[]

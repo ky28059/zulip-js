@@ -61,7 +61,7 @@ export default function eventsWrapper(config: ZulipRC) {
       try {
         // eslint-disable-next-line no-await-in-loop
         const res = await z.events.retrieve({
-          queue_id: queueId,
+          queue_id: queueId!,
           last_event_id: lastEventId,
           dont_block: false,
         });

@@ -1,4 +1,5 @@
 import parseConfigFile, { ZulipRC } from './zuliprc';
+import fetchApiKey from './fetch_api_key';
 
 import api from './api';
 
@@ -72,7 +73,7 @@ export default async function zulip(initialConfig: InitOptions) {
 
   let apiKey;
   if (!('apiKey' in initialConfig)) {
-    const res = await accounts(initialConfig as any).retrieve();
+    const res = await fetchApiKey({ ...initialConfig, apiURL }); // TODO
     apiKey = res.api_key;
   } else {
     apiKey = initialConfig.apiKey;
