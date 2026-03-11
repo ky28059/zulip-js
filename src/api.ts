@@ -8,10 +8,10 @@ export type ZulipSuccess<T extends object> = T & {
   ignored_parameters_unsupported?: string[]
 }
 
-type ZulipError = {
+export type ZulipError = {
   result: 'error',
   msg: string,
-  code: string // TODO?
+  code: string // TODO: union type?
 }
 
 export default async function api<T extends object>(
@@ -38,7 +38,7 @@ export default async function api<T extends object>(
       url.searchParams.append(key, value);
     });
   }
-  const response = await fetch(url.href, options);
+  const response = await fetch(url, options);
   try {
     return await response.json();
   } catch (e) {
