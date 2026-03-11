@@ -1,8 +1,6 @@
-import chai from 'chai';
+import { expect } from 'chai';
 import emojis from '../../lib/resources/emojis';
 import { config, stubNetwork } from '../common';
-
-chai.should();
 
 describe('Emojis', () => {
   it('should fetch emojis', async () => {
@@ -18,12 +16,12 @@ describe('Emojis', () => {
       result: 'success',
     };
     stubNetwork((url, options) => {
-      url.should.equal(`${config.apiURL}/realm/emoji`);
-      options.method.should.be.equal('GET');
-      options.should.not.have.property('body');
+      expect(url).to.equal(`${config.apiURL}/realm/emoji`);
+      expect(options.method).to.equal('GET');
+      expect(options.method).to.not.have.property('body');
     }, output);
 
     const data = await emojis(config).retrieve();
-    data.should.have.property('result', 'success');
+    expect(data).to.have.property('result', 'success');
   });
 });

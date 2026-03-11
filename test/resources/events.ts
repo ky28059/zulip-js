@@ -1,14 +1,13 @@
-import chai from 'chai';
+import { expect } from 'chai';
 import events from '../../lib/resources/events';
 import { config, stubNetwork } from '../common';
-
-chai.should();
 
 describe('Events', () => {
   it('should fetch events', async () => {
     const params = {
       last_event_id: -1,
       dont_block: true,
+      queue_id: 'fb67bf8a-c031-47cc-84cf-ed80accacda8'
     };
     const output = {
       events: [
@@ -24,16 +23,16 @@ describe('Events', () => {
       queue_id: '1511901550:3',
     };
     stubNetwork((url, options) => {
-      url.should.contain(`${config.apiURL}/events`);
-      options.method.should.be.equal('GET');
-      options.should.not.have.property('body');
-      [...new URL(url).searchParams].should.have.deep.members([
+      expect(url).to.contain(`${config.apiURL}/events`);
+      expect(options.method).to.equal('GET');
+      expect(options).to.not.have.property('body');
+      expect([...new URL(url).searchParams]).to.have.deep.members([
         ['last_event_id', `${params.last_event_id}`],
         ['dont_block', `${params.dont_block}`],
       ]);
     }, output);
 
     const data = await events(config).retrieve(params);
-    data.should.have.property('result', 'success');
+    expect(data).to.have.property('result', 'success');
   });
 });

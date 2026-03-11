@@ -10,11 +10,11 @@
     "ini": "^5.0.0"
   },
   "devDependencies": {
+    "@types/chai": "^5.2.3",
     "@types/ini": "^4.1.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.0.0",
     "@types/sinon": "^21.0.0",
-    "@types/chai": "^5.2.3",
     "chai": "^6.2.2",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
@@ -33,7 +33,7 @@
     "prepare": "npm run build",
     "lint": "eslint . && prettier --loglevel=warn --check .",
     "lint:fix": "eslint --fix . && prettier --loglevel=warn --write .",
-    "test": "npm run lint && npm run build && mocha test/*",
+    "test": "npm run build && mocha -r ts-node/register test/*",
     "call": "ts-node examples/interactive_call_endpoint.ts"
   },
   "repository": {
