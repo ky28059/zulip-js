@@ -2,6 +2,7 @@ import type { ZulipRC } from '../zuliprc';
 import type { ZulipEvent } from '../types/events';
 import api from '../api';
 
+// {@Link https://zulip.com/api/get-events}
 export interface RetrieveEventsParams {
   queue_id: string,
   last_event_id?: number,

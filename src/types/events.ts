@@ -834,3 +834,5 @@ export type Events = {
   web_reload_client: WebReloadClientEvent,
   user_settings: UserSettingsEvent
 };
+
+export type EventType = keyof Events;
