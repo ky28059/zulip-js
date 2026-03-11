@@ -54,29 +54,26 @@ export interface DeleteStreamParams {
 export default function streams(config: ZulipRC) {
   return {
     retrieve: (params?: GetStreamsParams) => {
-      const url = `${config.apiURL}/streams`;
-      return api<GetStreamsResponse>(url, config, 'GET', params);
+      return api<GetStreamsResponse>('/streams', config, 'GET', params);
     },
     getStreamId: (initialParams: string | GetStreamIdParams) => {
-      const url = `${config.apiURL}/get_stream_id`;
       const params = typeof initialParams === 'string' ? { stream: initialParams } : initialParams;
-      return api<GetStreamIdResponse>(url, config, 'GET', params);
+      return api<GetStreamIdResponse>('/get_stream_id', config, 'GET', params);
     },
     subscriptions: {
       retrieve: (params?: GetSubscriptionsParams) => {
-        const url = `${config.apiURL}/users/me/subscriptions`;
-        return api<GetSubscriptionsResponse>(url, config, 'GET', params);
+        return api<GetSubscriptionsResponse>('/users/me/subscriptions', config, 'GET', params);
       },
     },
     topics: {
       retrieve: (params: GetStreamTopicsParams) => {
         const { stream_id, ...rest } = params;
-        const url = `${config.apiURL}/users/me/${stream_id}/topics`;
+        const url = `/users/me/${stream_id}/topics`;
         return api<GetStreamTopicsResponse>(url, config, 'GET', rest);
       },
     },
     deleteById: (params: DeleteStreamParams) => {
-      const url = `${config.apiURL}/streams/${params.stream_id}`;
+      const url = `/streams/${params.stream_id}`;
       return api<{}>(url, config, 'DELETE');
     },
   };

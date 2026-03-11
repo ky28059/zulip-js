@@ -17,8 +17,7 @@ export interface RetrieveEmojisResponse {
 export default function emojis(config: ZulipRC) {
   return {
     retrieve: () => {
-      const url = `${config.apiURL}/realm/emoji`;
-      return api<RetrieveEmojisResponse>(url, config, 'GET');
+      return api<RetrieveEmojisResponse>('/realm/emoji', config, 'GET');
     },
   };
 }

@@ -74,32 +74,26 @@ export interface GetAlertWordsResponse {
 export default function users(config: ZulipRC) {
   return {
     retrieve: (params?: GetUsersParams) => {
-      const url = `${config.apiURL}/users`;
-      return api<GetUsersResponse>(url, config, 'GET', params);
+      return api<GetUsersResponse>('/users', config, 'GET', params);
     },
     create: (params: CreateUserParams) => {
-      const url = `${config.apiURL}/users`;
-      return api<CreateUserResponse>(url, config, 'POST', params);
+      return api<CreateUserResponse>('/users', config, 'POST', params);
     },
     me: {
       getProfile: () => {
-        const url = `${config.apiURL}/users/me`;
-        return api<User & { max_message_id: number }>(url, config, 'GET'); // TODO?
+        return api<User & { max_message_id: number }>('/users/me', config, 'GET'); // TODO?
       },
       subscriptions: {
         add: (params: AddSubscriptionParams) => {
-          const url = `${config.apiURL}/users/me/subscriptions`;
-          return api<AddSubscriptionResponse>(url, config, 'POST', params);
+          return api<AddSubscriptionResponse>('/users/me/subscriptions', config, 'POST', params);
         },
         remove: (params: RemoveSubscriptionParams) => {
-          const url = `${config.apiURL}/users/me/subscriptions`;
-          return api<RemoveSubscriptionResponse>(url, config, 'DELETE', params);
+          return api<RemoveSubscriptionResponse>('/users/me/subscriptions', config, 'DELETE', params);
         },
       },
       alertWords: {
         retrieve: () => {
-          const url = `${config.apiURL}/users/me/alert_words`;
-          return api<GetAlertWordsResponse>(url, config, 'GET');
+          return api<GetAlertWordsResponse>('/users/me/alert_words', config, 'GET');
         },
       },
     },

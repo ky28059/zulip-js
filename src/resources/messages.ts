@@ -143,49 +143,46 @@ export interface DeleteMessageParams {
 export default function messages(config: ZulipRC) {
   return {
     retrieve: (params: GetMessagesParams) => {
-      const url = `${config.apiURL}/messages`;
-      return api<GetMessagesResponse>(url, config, 'GET', params);
+      return api<GetMessagesResponse>('/messages', config, 'GET', params);
     },
     send: (params: SendMessageParams) => {
-      const url = `${config.apiURL}/messages`;
-      return api<SendMessageResponse>(url, config, 'POST', params);
+      return api<SendMessageResponse>('/messages', config, 'POST', params);
     },
     render: (initialParams: RenderMessageParams | string) => {
-      const url = `${config.apiURL}/messages/render`;
       const params: RenderMessageParams = typeof initialParams === 'string'
         ? { content: initialParams }
         : initialParams;
 
-      return api<RenderMessageResponse>(url, config, 'POST', params);
+      return api<RenderMessageResponse>('/messages/render', config, 'POST', params);
     },
     update: (params: UpdateMessageParams) => {
-      const url = `${config.apiURL}/messages/${params.message_id}`;
+      const url = `/messages/${params.message_id}`;
       return api<UpdateMessageResponse>(url, config, 'PATCH', params as any);
     },
     flags: {
       add: (initialParams: UpdateMessageFlagsParams) => {
         const params = { ...initialParams, op: 'add' };
-        return api<UpdateMessageFlagsResponse>(`${config.apiURL}/messages/flags`, config, 'POST', params);
+        return api<UpdateMessageFlagsResponse>(`/messages/flags`, config, 'POST', params);
       },
       remove: (initialParams: UpdateMessageFlagsParams) => {
         const params = { ...initialParams, op: 'remove' };
-        return api<UpdateMessageFlagsResponse>(`${config.apiURL}/messages/flags`, config, 'POST', params);
+        return api<UpdateMessageFlagsResponse>(`/messages/flags`, config, 'POST', params);
       },
     },
     getById: (params: GetMessageParams) => {
-      const url = `${config.apiURL}/messages/${params.message_id}`;
+      const url = `/messages/${params.message_id}`;
       return api<GetMessageResponse>(url, config, 'GET', params);
     },
     getHistoryById: (params: GetMessageHistoryParams) => {
-      const url = `${config.apiURL}/messages/${params.message_id}/history`;
+      const url = `/messages/${params.message_id}/history`;
       return api<GetMessageHistoryResponse>(url, config, 'GET', params);
     },
     deleteReactionById: (params: DeleteReactionParams) => {
-      const url = `${config.apiURL}/messages/${params.message_id}/reactions`;
+      const url = `/messages/${params.message_id}/reactions`;
       return api<{}>(url, config, 'DELETE', params);
     },
     deleteById: (params: DeleteMessageParams) => {
-      const url = `${config.apiURL}/messages/${params.message_id}`;
+      const url = `/messages/${params.message_id}`;
       return api<{}>(url, config, 'DELETE', params);
     },
   };

@@ -23,8 +23,8 @@ function getCallEndpoint(config: ZulipRC) {
     params?: Record<string, any>,
   ): Promise<any> {
     const url = endpoint.startsWith('/')
-      ? `${config.apiURL}${endpoint}`
-      : `${config.apiURL}/${endpoint}`;
+      ? endpoint
+      : `/${endpoint}`;
 
     return api(url, config, method, params);
   };

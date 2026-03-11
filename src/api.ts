@@ -15,12 +15,12 @@ type ZulipError = {
 }
 
 export default async function api<T extends object>(
-  baseUrl: string,
+  endpoint: string,
   config: ZulipRC,
   method: HttpMethod,
   params?: Record<string, any>,
 ): Promise<ZulipSuccess<T> | ZulipError> {
-  const url = new URL(baseUrl);
+  const url = new URL(config.apiURL + endpoint);
   const auth = Buffer.from(`${config.username}:${config.apiKey}`).toString('base64');
   const options: RequestInit = { method, headers: { Authorization: `Basic ${auth}` } };
 

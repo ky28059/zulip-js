@@ -34,12 +34,10 @@ export interface DeregisterQueueResponse {
 export default function queues(config: ZulipRC) {
   return {
     register: (params: RegisterQueueParams) => {
-      const url = `${config.apiURL}/register`;
-      return api<RegisterQueueResponse>(url, config, 'POST', params);
+      return api<RegisterQueueResponse>('/register', config, 'POST', params);
     },
     deregister: (params: DeregisterQueueParams) => {
-      const url = `${config.apiURL}/events`;
-      return api<DeregisterQueueResponse>(url, config, 'DELETE', params);
+      return api<DeregisterQueueResponse>('/events', config, 'DELETE', params);
     },
   };
 }

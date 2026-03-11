@@ -12,8 +12,7 @@ export interface TypingParams {
 export default function typing(config: ZulipRC) {
   return {
     send: (params: TypingParams) => {
-      const url = `${config.apiURL}/typing`;
-      return api<{}>(url, config, 'POST', params);
+      return api<{}>('/typing', config, 'POST', params);
     },
   };
 }

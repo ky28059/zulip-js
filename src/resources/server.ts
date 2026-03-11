@@ -42,8 +42,7 @@ export interface ServerSettingsResponse {
 export default function server(config: ZulipRC) {
   return {
     settings: () => {
-      const url = `${config.apiURL}/server_settings`;
-      return api<ServerSettingsResponse>(url, config, 'GET');
+      return api<ServerSettingsResponse>('/server_settings', config, 'GET');
     },
   };
 }

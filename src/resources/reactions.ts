@@ -25,7 +25,7 @@ export default function reactions(config: ZulipRC) {
   ) => {
     const { message_id, ...params } = initParams;
     return api<{}>(
-      `${config.apiURL}/messages/${message_id}/reactions`,
+      `/messages/${message_id}/reactions`,
       config,
       method,
       params,

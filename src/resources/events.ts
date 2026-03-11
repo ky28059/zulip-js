@@ -17,8 +17,7 @@ export interface RetrieveEventsResponse {
 export default function events(config: ZulipRC) {
   return {
     retrieve: (params: RetrieveEventsParams) => {
-      const url = `${config.apiURL}/events`;
-      return api<RetrieveEventsResponse>(url, config, 'GET', params);
+      return api<RetrieveEventsResponse>('/events', config, 'GET', params);
     },
   };
 }
