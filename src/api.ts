@@ -14,18 +14,16 @@ type ZulipError = {
   code: string // TODO?
 }
 
-async function api<T extends object>(
+export default async function api<T extends object>(
   baseUrl: string,
   config: ZulipRC,
   method: HttpMethod,
   params?: Record<string, any>,
 ): Promise<ZulipSuccess<T> | ZulipError> {
   const url = new URL(baseUrl);
-  const auth = Buffer.from(`${config.username}:${config.apiKey}`).toString(
-    'base64',
-  );
-  const authHeader = `Basic ${auth}`;
-  const options: RequestInit = { method, headers: { Authorization: authHeader } };
+  const auth = Buffer.from(`${config.username}:${config.apiKey}`).toString('base64');
+  const options: RequestInit = { method, headers: { Authorization: `Basic ${auth}` } };
+
   if (method === 'POST' || method === 'PATCH') {
     options.body = new FormData();
     Object.keys(params!).forEach((key) => {
@@ -63,5 +61,3 @@ async function api<T extends object>(
     throw e;
   }
 }
-
-export default api;

@@ -141,8 +141,6 @@ export interface DeleteMessageParams {
 }
 
 export default function messages(config: ZulipRC) {
-  const baseURL = `${config.apiURL}/messages`;
-  const flagsURL = `${baseURL}/flags`;
   return {
     retrieve: (params: GetMessagesParams) => {
       const url = `${config.apiURL}/messages`;
@@ -167,11 +165,11 @@ export default function messages(config: ZulipRC) {
     flags: {
       add: (initialParams: UpdateMessageFlagsParams) => {
         const params = { ...initialParams, op: 'add' };
-        return api<UpdateMessageFlagsResponse>(flagsURL, config, 'POST', params);
+        return api<UpdateMessageFlagsResponse>(`${config.apiURL}/messages/flags`, config, 'POST', params);
       },
       remove: (initialParams: UpdateMessageFlagsParams) => {
         const params = { ...initialParams, op: 'remove' };
-        return api<UpdateMessageFlagsResponse>(flagsURL, config, 'POST', params);
+        return api<UpdateMessageFlagsResponse>(`${config.apiURL}/messages/flags`, config, 'POST', params);
       },
     },
     getById: (params: GetMessageParams) => {
