@@ -11,8 +11,11 @@
   },
   "devDependencies": {
     "@types/ini": "^4.1.1",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.0.0",
-    "chai": "^4.5.0",
+    "@types/sinon": "^21.0.0",
+    "@types/chai": "^5.2.3",
+    "chai": "^6.2.2",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.1.0",
@@ -20,7 +23,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.0",
     "mocha": "^10.7.3",
     "prettier": "^3.3.3",
-    "sinon": "^19.0.2",
+    "sinon": "^21.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },

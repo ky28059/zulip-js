@@ -1,6 +1,6 @@
-const chai = require('chai');
-const accounts = require('../../lib/resources/accounts');
-const common = require('../common');
+import chai from 'chai';
+import accounts from '../../lib/resources/accounts';
+import { stubNetwork } from '../common';
 
 chai.should();
 
@@ -10,7 +10,7 @@ const config = {
   apiURL: 'valid.realm.url/api/v1',
 };
 
-const validator = (url, options) => {
+const validator = (url: string, options: RequestInit) => {
   url.should.equal(`${config.apiURL}/fetch_api_key`);
   options.method.should.be.equal('POST');
   Object.keys(options.body.data).length.should.equal(2);
@@ -27,7 +27,7 @@ describe('Accounts', () => {
       api_key: 'randomcharactersonlyq32YIpC8aMSH',
       email: config.email,
     };
-    common.stubNetwork(validator, output);
+    stubNetwork(validator, output);
     const data = await accounts(config).retrieve();
     data.result.should.be.equal('success');
   });
@@ -38,7 +38,7 @@ describe('Accounts', () => {
       msg: 'Your username or password is incorrect.',
       reason: 'incorrect_creds',
     };
-    common.stubNetwork(validator, output);
+    stubNetwork(validator, output);
     const data = await accounts(config).retrieve();
     data.result.should.be.equal('error');
   });

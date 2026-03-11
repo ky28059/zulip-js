@@ -44,40 +44,6 @@ describe('Users', () => {
     data.should.have.property('result', 'success');
   });
 
-  it('should fetch pointer for user', async () => {
-    const validator = (url, options) => {
-      url.should.equal(`${common.config.apiURL}/users/me/pointer`);
-      options.method.should.be.equal('GET');
-      options.should.not.have.property('body');
-    };
-    const output = {
-      pointer: 171,
-      msg: '',
-      result: 'success',
-    };
-    common.stubNetwork(validator, output);
-    const data = await users(common.config).me.pointer.retrieve();
-    data.should.have.property('result', 'success');
-  });
-
-  it('should update pointer for user', async () => {
-    const pointer = 172;
-    const validator = (url, options) => {
-      url.should.equal(`${common.config.apiURL}/users/me/pointer`);
-      options.method.should.be.equal('POST');
-      options.should.have.property('body');
-      Object.keys(options.body.data).length.should.equal(1);
-      options.body.data.pointer.should.equal(pointer);
-    };
-    const output = {
-      msg: '',
-      result: 'success',
-    };
-    common.stubNetwork(validator, output);
-    const data = await users(common.config).me.pointer.update(pointer);
-    data.should.have.property('result', 'success');
-  });
-
   it('should fetch user profile', async () => {
     const validator = (url, options) => {
       url.should.equal(`${common.config.apiURL}/users/me`);

@@ -1,7 +1,7 @@
-const sinon = require('sinon');
+import sinon from 'sinon';
 
-const getFakes = (validator, output) => {
-  const fetch = (url, options) => {
+export function getFakes(validator: (url: string, options: RequestInit) => void, output: any) {
+  const fetch = (url: string, options: RequestInit) => {
     validator(url, options);
     const rval = (function rval() {
       const json = function json() {
@@ -14,9 +14,9 @@ const getFakes = (validator, output) => {
     return Promise.resolve(rval);
   };
   const FormData = () => {
-    const data = {};
+    const data: Record<string, any> = {};
     return {
-      append(key, value) {
+      append(key: string, value: any) {
         data[key] = value;
       },
       data,
@@ -26,29 +26,23 @@ const getFakes = (validator, output) => {
     fetch,
     FormData,
   };
-};
+}
 
 const sandbox = sinon.createSandbox();
 
-const stubNetwork = (validator, output) => {
+export function stubNetwork(validator: (url: string, options: RequestInit) => void, output: any) {
   const fakes = getFakes(validator, output);
   sandbox.stub(globalThis, 'fetch').callsFake(fakes.fetch);
   sandbox.stub(globalThis, 'FormData').callsFake(fakes.FormData);
-};
+}
 
 afterEach(() => {
   sandbox.restore();
 });
 
-const config = {
+export const config = {
   username: 'valid@email.com',
   apiKey: 'randomcharactersonlyq32YIpC8aMSH',
   apiURL: 'https://valid.realm.url/api/v1',
   realm: 'https://valid.realm.url/api',
-};
-
-module.exports = {
-  getFakes,
-  stubNetwork,
-  config,
 };
