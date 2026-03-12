@@ -1,13 +1,11 @@
-const chai = require('chai');
-const queues = require('../../lib/resources/queues');
-const common = require('../common');
-
-chai.should();
+import { expect } from 'chai';
+import queues from '../../lib/resources/queues';
+import { bodyToRecord, config, stubNetwork } from '../common';
 
 describe('Queues', () => {
   it('should register queue', async () => {
     const params = {
-      event_types: ['message'],
+      event_types: ['message' as const],
     };
     const output = {
       max_message_id: 173,
@@ -16,16 +14,18 @@ describe('Queues', () => {
       queue_id: '1511901550:2',
       last_event_id: -1,
     };
-    const validator = (url, options) => {
-      url.should.contain(`${common.config.apiURL}/register`);
-      options.method.should.be.equal('POST');
-      options.should.have.property('body');
-      Object.keys(options.body.data).length.should.be.equal(1);
-      options.body.data.event_types.should.be.equal('["message"]');
-    };
-    common.stubNetwork(validator, output);
-    const data = await queues(common.config).register(params);
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.contain(`${config.apiURL}/register`);
+      expect(options.method).to.be.equal('POST');
+      expect(options).to.have.property('body');
+
+      const body = bodyToRecord(options.body);
+      expect(Object.keys(body).length).to.be.equal(1);
+      expect(body.event_types).to.be.equal('["message"]');
+    }, output);
+
+    const data = await queues(config).register(params);
+    expect(data).to.have.property('result', 'success');
   });
 
   it('should deregister queue', async () => {
@@ -36,13 +36,13 @@ describe('Queues', () => {
       msg: '',
       result: 'success',
     };
-    const validator = (url, options) => {
-      url.should.contain(`${common.config.apiURL}/events`);
-      options.method.should.be.equal('DELETE');
-      options.should.not.have.property('body');
-    };
-    common.stubNetwork(validator, output);
-    const data = await queues(common.config).deregister(params);
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.contain(`${config.apiURL}/events`);
+      expect(options.method).to.be.equal('DELETE');
+      expect(options).to.not.have.property('body');
+    }, output);
+
+    const data = await queues(config).deregister(params);
+    expect(data).to.have.property('result', 'success');
   });
 });

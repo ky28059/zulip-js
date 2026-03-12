@@ -32,7 +32,7 @@
     "prepare": "npm run build",
     "lint": "eslint . && prettier --loglevel=warn --check .",
     "lint:fix": "eslint --fix . && prettier --loglevel=warn --write .",
-    "test": "npm run build && mocha -r ts-node/register test/*",
+    "test": "npm run build && mocha -r ts-node/register test/**/*",
     "call": "ts-node examples/interactive_call_endpoint.ts"
   },
   "repository": {

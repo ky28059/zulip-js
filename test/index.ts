@@ -1,8 +1,6 @@
-import chai from 'chai';
+import { expect } from 'chai';
 import lib from '../lib/index';
-import { config, stubNetwork } from './common';
-
-chai.should();
+import { bodyToRecord, config, stubNetwork } from './common';
 
 const params = {
   one: '123',
@@ -19,20 +17,20 @@ describe('Index', () => {
   it('should call get endpoints', async () => {
     const z = await lib(config);
     stubNetwork((url, options) => {
-      url.should.contain(`${config.apiURL}/testurl`);
-      options.method.should.be.equal('GET');
-      options.should.not.have.property('body');
-      [...new URL(url).searchParams].should.have.deep.members([
+      expect(url).to.contain(`${config.apiURL}/testurl`);
+      expect(options.method).to.be.equal('GET');
+      expect(options).to.not.have.property('body');
+      expect([...new URL(url).searchParams]).to.have.deep.members([
         ['one', params.one],
         ['two', params.two],
       ]);
     }, output);
 
-    (await z.callEndpoint('/testurl', 'GET', params)).should.have.property(
+    expect((await z.callEndpoint('/testurl', 'GET', params))).to.have.property(
       'result',
       'success',
     );
-    (await z.callEndpoint('testurl', 'GET', params)).should.have.property(
+    expect((await z.callEndpoint('testurl', 'GET', params))).to.have.property(
       'result',
       'success',
     );
@@ -41,18 +39,20 @@ describe('Index', () => {
   it('should call post endpoints', async () => {
     const z = await lib(config);
     stubNetwork((url, options) => {
-      url.should.contain(`${config.apiURL}/testurl`);
-      options.method.should.be.equal('POST');
-      Object.keys(options.body.data).length.should.equal(2);
-      options.body.data.one.should.equal(params.one);
-      options.body.data.two.should.equal(params.two);
+      expect(url).to.contain(`${config.apiURL}/testurl`);
+      expect(options.method).to.be.equal('POST');
+
+      const body = bodyToRecord(options.body);
+      expect(Object.keys(body).length).to.equal(2);
+      expect(body.one).to.equal(params.one);
+      expect(body.two).to.equal(params.two);
     }, output);
 
-    (await z.callEndpoint('/testurl', 'POST', params)).should.have.property(
+    expect((await z.callEndpoint('/testurl', 'POST', params))).to.have.property(
       'result',
       'success',
     );
-    (await z.callEndpoint('testurl', 'POST', params)).should.have.property(
+    expect((await z.callEndpoint('testurl', 'POST', params))).to.have.property(
       'result',
       'success',
     );

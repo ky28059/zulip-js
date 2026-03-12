@@ -1,8 +1,16 @@
 import sinon from 'sinon';
 
 export function getFakes(validator: (url: string, options: RequestInit) => void, output: any) {
-  const fetch = (url: string, options: RequestInit) => {
-    validator(url, options);
+  const fetch = (url: string | URL | Request, options?: RequestInit) => {
+    let urlString: string;
+    if (typeof url === 'string') {
+      urlString = url;
+    } else if (url instanceof Request) {
+      urlString = url.url;
+    } else {
+      urlString = url.toString();
+    }
+    validator(urlString, options || {});
     const rval = (function rval() {
       const json = function json() {
         return output;
@@ -11,21 +19,10 @@ export function getFakes(validator: (url: string, options: RequestInit) => void,
         json,
       };
     })();
-    return Promise.resolve(rval);
+    return Promise.resolve(rval as unknown as Response);
   };
-  const FormData = () => {
-    const data: Record<string, any> = {};
-    return {
-      append(key: string, value: any) {
-        data[key] = value;
-      },
-      data,
-    };
-  };
-  return {
-    fetch,
-    FormData,
-  };
+
+  return { fetch };
 }
 
 const sandbox = sinon.createSandbox();
@@ -33,12 +30,17 @@ const sandbox = sinon.createSandbox();
 export function stubNetwork(validator: (url: string, options: RequestInit) => void, output: any) {
   const fakes = getFakes(validator, output);
   sandbox.stub(globalThis, 'fetch').callsFake(fakes.fetch);
-  sandbox.stub(globalThis, 'FormData').callsFake(fakes.FormData);
 }
 
 afterEach(() => {
   sandbox.restore();
 });
+
+export function bodyToRecord(b: BodyInit | null | undefined) {
+  if (b instanceof URLSearchParams) return Object.fromEntries(b);
+  if (b instanceof FormData) return Object.fromEntries(b.entries());
+  return {};
+}
 
 export const config = {
   username: 'valid@email.com',
