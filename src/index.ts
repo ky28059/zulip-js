@@ -9,7 +9,14 @@ export type { User, UserRole, BotType } from './types/users';
 
 export type { RetrieveEmojisResponse, DeactivateEmojiParams } from './resources/emojis';
 export type { RetrieveEventsParams, RetrieveEventsResponse } from './resources/events';
-export type {} from './resources/linkifiers';
+export type {
+  AddLinkifierParams,
+  AddLinkifierResponse,
+  UpdateLinkifierParams,
+  RemoveLinkifierParams,
+  ReorderLinkifiersParams,
+  GetLinkifiersResponse
+} from './resources/linkifiers';
 export type {
   GetMessagesParams,
   GetMessagesResponse,
