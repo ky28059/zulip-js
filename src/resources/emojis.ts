@@ -10,8 +10,14 @@ export interface EmojiDetail {
   author_id?: number | null
 }
 
+// {@Link https://zulip.com/api/get-custom-emoji}
 export interface RetrieveEmojisResponse {
   emoji: Record<string, EmojiDetail>
+}
+
+// {@Link https://zulip.com/api/deactivate-custom-emoji}
+export interface DeactivateEmojiParams {
+  emoji_name: string
 }
 
 export default function emojis(config: ZulipRC) {
@@ -19,5 +25,9 @@ export default function emojis(config: ZulipRC) {
     retrieve: () => {
       return api<RetrieveEmojisResponse>('/realm/emoji', config, 'GET');
     },
+    deactivate: (params: string | DeactivateEmojiParams) => {
+      const name = typeof params === 'string' ? params : params.emoji_name;
+      return api<{}>(`/realm/emoji/${name}`, config, 'DELETE');
+    }
   };
 }

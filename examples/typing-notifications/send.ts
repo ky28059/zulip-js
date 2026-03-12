@@ -1,11 +1,11 @@
-const zulip = require('../../lib');
+import zulip from '../../lib';
 
 const recipient = Number(process.env.ZULIP_TYPING_RECIPIENT);
 
 const config = {
-  username: process.env.ZULIP_USERNAME,
-  apiKey: process.env.ZULIP_API_KEY,
-  realm: process.env.ZULIP_REALM,
+  username: process.env.ZULIP_USERNAME!,
+  apiKey: process.env.ZULIP_API_KEY!,
+  realm: process.env.ZULIP_REALM!,
 };
 
 (async () => {
@@ -15,6 +15,9 @@ const config = {
   const res = await z.queues.register({
     event_types: ['typing'],
   });
+  if (res.result === 'error')
+    return console.error('queue registration failed:', res.msg);
+
   console.log('registered queue');
   const queueID = res.queue_id;
 

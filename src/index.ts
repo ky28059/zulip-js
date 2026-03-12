@@ -7,7 +7,7 @@ export type { ReactionType } from './types/reactions';
 export type { Stream, StreamTopic, StreamPostPolicy, Subscription } from './types/streams';
 export type { User, UserRole, BotType } from './types/users';
 
-export type {} from './resources/emojis';
+export type { RetrieveEmojisResponse, DeactivateEmojiParams } from './resources/emojis';
 export type { RetrieveEventsParams, RetrieveEventsResponse } from './resources/events';
 export type {} from './resources/filters';
 export type {
