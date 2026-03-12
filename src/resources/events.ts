@@ -1,0 +1,23 @@
+import type { ZulipRC } from '../zuliprc';
+import type { ZulipEvent } from '../types/events';
+import api from '../api';
+
+// {@Link https://zulip.com/api/get-events}
+export interface RetrieveEventsParams {
+  queue_id: string,
+  last_event_id?: number,
+  dont_block?: boolean
+}
+
+export interface RetrieveEventsResponse {
+  events: ZulipEvent[],
+  queue_id: string
+}
+
+export default function events(config: ZulipRC) {
+  return {
+    retrieve: (params: RetrieveEventsParams) => {
+      return api<RetrieveEventsResponse>('/events', config, 'GET', params);
+    },
+  };
+}

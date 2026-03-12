@@ -1,0 +1,88 @@
+import parseConfigFile, { ZulipRC } from './zuliprc';
+import fetchApiKey from './fetch_api_key';
+
+import api from './api';
+
+import accounts from './resources/accounts';
+import streams from './resources/streams';
+import messages from './resources/messages';
+import queues from './resources/queues';
+import events from './resources/events';
+import users from './resources/users';
+import emojis from './resources/emojis';
+import typing from './resources/typing';
+import reactions from './resources/reactions';
+import server from './resources/server';
+import linkifiers from './resources/linkifiers';
+import eventsWrapper from './events_wrapper';
+
+function getCallEndpoint(config: ZulipRC) {
+  return function callEndpoint(
+    endpoint: string,
+    method: 'GET' | 'POST' | 'DELETE' | 'PATCH' = 'GET',
+    params?: Record<string, any>,
+  ): Promise<any> {
+    const url = endpoint.startsWith('/')
+      ? endpoint
+      : `/${endpoint}`;
+
+    return api(url, config, method, params);
+  };
+}
+
+function resources(config: ZulipRC) {
+  return {
+    config,
+    callEndpoint: getCallEndpoint(config),
+    accounts: accounts(config),
+    streams: streams(config),
+    messages: messages(config),
+    queues: queues(config),
+    events: events(config),
+    users: users(config),
+    emojis: emojis(config),
+    typing: typing(config),
+    reactions: reactions(config),
+    server: server(config),
+    linkifiers: linkifiers(config),
+    callOnEachEvent: eventsWrapper(config),
+  };
+}
+
+type InitOptions = {
+  zuliprc: string
+} | {
+  realm: string,
+  username: string,
+  apiKey: string
+} | {
+  realm: string,
+  username: string,
+  password: string
+}
+
+export default async function zulip(initialConfig: InitOptions) {
+  if ('zuliprc' in initialConfig) {
+    return resources(await parseConfigFile(initialConfig.zuliprc));
+  }
+
+  const realm = initialConfig.realm;
+  const apiURL = realm.endsWith('/api')
+    ? `${realm}/v1`
+    : `${realm}/api/v1`;
+
+  let apiKey;
+  if (!('apiKey' in initialConfig)) {
+    const res = await fetchApiKey({ ...initialConfig, apiURL }); // TODO
+    apiKey = res.api_key;
+  } else {
+    apiKey = initialConfig.apiKey;
+  }
+
+  return resources({
+    realm,
+    apiURL,
+    username: initialConfig.username,
+    apiKey,
+  });
+}
