@@ -1,11 +1,11 @@
-const zulip = require('../lib');
+import zulip from '../lib';
 
 const stream = 'test-bot';
 
 const config = {
-  username: process.env.ZULIP_USERNAME,
-  apiKey: process.env.ZULIP_API_KEY,
-  realm: process.env.ZULIP_REALM,
+  username: process.env.ZULIP_USERNAME!,
+  apiKey: process.env.ZULIP_API_KEY!,
+  realm: process.env.ZULIP_REALM!,
 };
 
 (async () => {
@@ -14,11 +14,14 @@ const config = {
   const res = await z.messages.send({
     to: stream,
     type: 'stream',
-    subject: 'Testing zulip-js',
+    topic: 'Testing zulip-js',
     content: 'Something is wrong....',
   });
   // Response includes Message ID
   console.log(res);
+
+  if (res.result === 'error')
+    return console.error('message send failed:', res.msg);
 
   // Update the message
   console.log(
@@ -40,15 +43,10 @@ const config = {
   // Fetch most recent message
   readParams.anchor = 1000000000;
   console.log(await z.messages.retrieve(readParams));
-  // Get the id for the last message the user read
-  const resp = await z.users.me.pointer.retrieve();
-  // Fetch the messages around the last message that the user read
-  readParams.anchor = resp.pointer;
-  console.log(await z.messages.retrieve(readParams));
   // Add a flag for the message that was sent
   const flagParams = {
     messages: [res.id],
-    flag: 'read',
+    flag: 'read' as const,
   };
   console.log(await z.messages.flags.add(flagParams));
   // Remove the flag for the message that was sent
