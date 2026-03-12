@@ -1,16 +1,12 @@
 import sinon from 'sinon';
 
 export function getFakes(validator: (url: string, options: RequestInit) => void, output: any) {
-  const fetch = (url: string | URL | Request, options?: RequestInit) => {
-    let urlString: string;
-    if (typeof url === 'string') {
-      urlString = url;
-    } else if (url instanceof Request) {
-      urlString = url.url;
-    } else {
-      urlString = url.toString();
-    }
-    validator(urlString, options || {});
+  const fetch = (target: string | URL | Request, options?: RequestInit) => {
+    const url = typeof target === 'string' ? target
+      : target instanceof Request ? target.url
+      : target.toString();
+    validator(url, options || {});
+
     const rval = (function rval() {
       const json = function json() {
         return output;

@@ -13,7 +13,7 @@ import emojis from './resources/emojis';
 import typing from './resources/typing';
 import reactions from './resources/reactions';
 import server from './resources/server';
-import filters from './resources/filters';
+import linkifiers from './resources/linkifiers';
 import eventsWrapper from './events_wrapper';
 
 function getCallEndpoint(config: ZulipRC) {
@@ -44,7 +44,7 @@ function resources(config: ZulipRC) {
     typing: typing(config),
     reactions: reactions(config),
     server: server(config),
-    filters: filters(config),
+    linkifiers: linkifiers(config),
     callOnEachEvent: eventsWrapper(config),
   };
 }
