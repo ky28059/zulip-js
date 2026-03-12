@@ -1,16 +1,9 @@
-const chai = require('chai');
-const streams = require('../../lib/resources/streams');
-const common = require('../common');
-
-chai.should();
+import { expect } from 'chai';
+import streams from '../../lib/resources/streams';
+import { config, stubNetwork } from '../common';
 
 describe('Streams', () => {
   it('should fetch streams', async () => {
-    const validator = (url, options) => {
-      url.should.contain(`${common.config.apiURL}/streams`);
-      options.method.should.be.equal('GET');
-      options.should.not.have.property('body');
-    };
     const output = {
       result: 'success',
       msg: '',
@@ -47,23 +40,17 @@ describe('Streams', () => {
         },
       ],
     };
-    common.stubNetwork(validator, output);
-    const data = await streams(common.config).retrieve();
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.contain(`${config.apiURL}/streams`);
+      expect(options.method).to.be.equal('GET');
+      expect(options).to.not.have.property('body');
+    }, output);
+
+    const data = await streams(config).retrieve();
+    expect(data).to.have.property('result', 'success');
   });
 
   it('should fetch subscriptions', async () => {
-    const params = {
-      subscriptions: JSON.stringify([{ name: 'off topic' }]),
-    };
-    const validator = (url, options) => {
-      url.should.contain(`${common.config.apiURL}/users/me/subscriptions`);
-      options.method.should.be.equal('GET');
-      options.should.not.have.property('body');
-      [...new URL(url).searchParams].should.have.deep.members([
-        ['subscriptions', params.subscriptions],
-      ]);
-    };
     const output = {
       msg: '',
       result: 'success',
@@ -100,45 +87,44 @@ describe('Streams', () => {
         },
       ],
     };
-    common.stubNetwork(validator, output);
-    const data = await streams(common.config).subscriptions.retrieve(params);
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.contain(`${config.apiURL}/users/me/subscriptions`);
+      expect(options.method).to.be.equal('GET');
+      expect(options).to.not.have.property('body');
+    }, output);
+
+    const data = await streams(config).subscriptions.retrieve();
+    expect(data).to.have.property('result', 'success');
   });
 
   it('should fetch stream id', async () => {
     const params = {
       stream: 'bot testing',
     };
-    const validator = (url, options) => {
-      url.should.contain(`${common.config.apiURL}/get_stream_id`);
-      options.method.should.be.equal('GET');
-      options.should.not.have.property('body');
-      [...new URL(url).searchParams].should.have.deep.members([
-        ['stream', params.stream],
-      ]);
-    };
     const output = {
       result: 'success',
       msg: '',
       stream_id: 94,
     };
-    common.stubNetwork(validator, output);
-    let data = await streams(common.config).getStreamId(params);
-    data.should.have.property('result', 'success');
-    data = await streams(common.config).getStreamId(params.stream);
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.contain(`${config.apiURL}/get_stream_id`);
+      expect(options.method).to.be.equal('GET');
+      expect(options).to.not.have.property('body');
+      expect([...new URL(url).searchParams]).to.have.deep.members([
+        ['stream', params.stream],
+      ]);
+    }, output);
+
+    let data = await streams(config).getStreamId(params);
+    expect(data).to.have.property('result', 'success');
+
+    data = await streams(config).getStreamId(params.stream);
+    expect(data).to.have.property('result', 'success');
   });
 
   it('should fetch the topics in a stream', async () => {
     const params = {
       stream_id: 15,
-    };
-    const validator = (url, options) => {
-      url.should.contain(
-        `${common.config.apiURL}/users/me/${params.stream_id}/topics`,
-      );
-      options.method.should.be.equal('GET');
-      options.should.not.have.property('body');
     };
     const output = {
       msg: '',
@@ -158,27 +144,34 @@ describe('Streams', () => {
         },
       ],
     };
-    common.stubNetwork(validator, output);
-    const data = await streams(common.config).topics.retrieve(params);
-    data.should.have.property('result', 'success');
-    data.should.have.property('topics');
+    stubNetwork((url, options) => {
+      expect(url).to.contain(
+        `${config.apiURL}/users/me/${params.stream_id}/topics`,
+      );
+      expect(options.method).to.be.equal('GET');
+      expect(options).to.not.have.property('body');
+    }, output);
+
+    const data = await streams(config).topics.retrieve(params);
+    expect(data).to.have.property('result', 'success');
+    expect(data).to.have.property('topics');
   });
 
   it('should delete stream by stream id', async () => {
     const params = {
       stream_id: 1,
     };
-    const validator = (url, options) => {
-      url.should.contain(`${common.config.apiURL}/streams/${params.stream_id}`);
-      options.should.not.have.property('body');
-      options.method.should.be.equal('DELETE');
-    };
     const output = {
       msg: '',
       result: 'success',
     };
-    common.stubNetwork(validator, output);
-    const data = await streams(common.config).deleteById(params);
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.contain(`${config.apiURL}/streams/${params.stream_id}`);
+      expect(options).to.not.have.property('body');
+      expect(options.method).to.be.equal('DELETE');
+    }, output);
+
+    const data = await streams(config).deleteById(params);
+    expect(data).to.have.property('result', 'success');
   });
 });

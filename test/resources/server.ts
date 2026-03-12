@@ -1,16 +1,9 @@
-const chai = require('chai');
-const server = require('../../lib/resources/server');
-const common = require('../common');
-
-chai.should();
+import { expect } from 'chai';
+import server from '../../lib/resources/server';
+import { config, stubNetwork } from '../common';
 
 describe('Server', () => {
   it('should fetch server settings', async () => {
-    const validator = (url, options) => {
-      url.should.contain(`${common.config.apiURL}/server_settings`);
-      options.should.not.have.property('body');
-      options.method.should.be.equal('GET');
-    };
     const output = {
       realm_name: 'Zulip Community',
       realm_icon: '/user_avatars/2/realm/icon.png?version=2',
@@ -33,8 +26,13 @@ describe('Server', () => {
       push_notifications_enabled: true,
       msg: '',
     };
-    common.stubNetwork(validator, output);
-    const data = await server(common.config).settings();
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.contain(`${config.apiURL}/server_settings`);
+      expect(options).to.not.have.property('body');
+      expect(options.method).to.equal('GET');
+    }, output);
+
+    const data = await server(config).settings();
+    expect(data).to.have.property('result', 'success');
   });
 });

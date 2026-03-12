@@ -29,6 +29,7 @@ describe('Events', () => {
       expect([...new URL(url).searchParams]).to.have.deep.members([
         ['last_event_id', `${params.last_event_id}`],
         ['dont_block', `${params.dont_block}`],
+        ['queue_id', params.queue_id],
       ]);
     }, output);
 

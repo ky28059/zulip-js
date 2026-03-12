@@ -1,16 +1,9 @@
-const chai = require('chai');
-const users = require('../../lib/resources/users');
-const common = require('../common');
-
-chai.should();
+import { expect } from 'chai';
+import users from '../../lib/resources/users';
+import { bodyToRecord, config, stubNetwork } from '../common';
 
 describe('Users', () => {
   it('should fetch users', async () => {
-    const validator = (url, options) => {
-      url.should.equal(`${common.config.apiURL}/users`);
-      options.method.should.be.equal('GET');
-      options.should.not.have.property('body');
-    };
     const output = {
       msg: '',
       result: 'success',
@@ -39,17 +32,17 @@ describe('Users', () => {
         },
       ],
     };
-    common.stubNetwork(validator, output);
-    const data = await users(common.config).retrieve();
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.equal(`${config.apiURL}/users`);
+      expect(options.method).to.be.equal('GET');
+      expect(options).to.not.have.property('body');
+    }, output);
+
+    const data = await users(config).retrieve();
+    expect(data).to.have.property('result', 'success');
   });
 
   it('should fetch user profile', async () => {
-    const validator = (url, options) => {
-      url.should.equal(`${common.config.apiURL}/users/me`);
-      options.method.should.be.equal('GET');
-      options.should.not.have.property('body');
-    };
     const output = {
       short_name: 'sample-bot',
       result: 'success',
@@ -63,43 +56,42 @@ describe('Users', () => {
       client_id: '77431db17e4f32068756902d7c09c8bb',
       is_admin: false,
     };
-    common.stubNetwork(validator, output);
-    const data = await users(common.config).me.getProfile();
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.equal(`${config.apiURL}/users/me`);
+      expect(options.method).to.be.equal('GET');
+      expect(options).to.not.have.property('body');
+    }, output);
+
+    const data = await users(config).me.getProfile();
+    expect(data).to.have.property('result', 'success');
   });
 
   it('should subscribe user to stream', async () => {
     const params = {
-      subscriptions: JSON.stringify([{ name: 'off topic' }]),
-    };
-    const validator = (url, options) => {
-      url.should.equal(`${common.config.apiURL}/users/me/subscriptions`);
-      options.method.should.be.equal('POST');
-      options.should.have.property('body');
-      Object.keys(options.body.data).length.should.equal(1);
-      options.body.data.subscriptions.should.equal(params.subscriptions);
+      subscriptions: [{ name: 'off topic' }],
     };
     const output = {
       already_subscribed: {},
       result: 'success',
     };
-    output[common.config.username] = ['off topic'];
-    common.stubNetwork(validator, output);
-    const data = await users(common.config).me.subscriptions.add(params);
-    data.should.have.property('result', 'success');
+
+    stubNetwork((url, options) => {
+      expect(url).to.equal(`${config.apiURL}/users/me/subscriptions`);
+      expect(options.method).to.be.equal('POST');
+      expect(options).to.have.property('body');
+      
+      const body = bodyToRecord(options.body);
+      expect(Object.keys(body).length).to.equal(1);
+      expect(JSON.parse(body.subscriptions)).to.deep.equal(params.subscriptions);
+    }, output);
+
+    const data = await users(config).me.subscriptions.add(params);
+    expect(data).to.have.property('result', 'success');
   });
 
   it('should remove subscriptions', async () => {
     const params = {
-      subscriptions: JSON.stringify(['Verona']),
-    };
-    const validator = (url, options) => {
-      url.should.equal(
-        `${common.config.apiURL}/users/me/subscriptions?subscriptions=%5B%22Verona%22%5D`,
-      );
-      options.method.should.be.equal('DELETE');
-      options.should.not.have.property('body');
-      options.method.should.be.equal('DELETE');
+      subscriptions: ['Verona'],
     };
     const output = {
       result: 'success',
@@ -107,9 +99,15 @@ describe('Users', () => {
       msg: '',
       removed: JSON.stringify(['Verona']),
     };
-    common.stubNetwork(validator, output);
-    const data = await users(common.config).me.subscriptions.remove(params);
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.equal(`${config.apiURL}/users/me/subscriptions?subscriptions=%5B%22Verona%22%5D`);
+      expect(options.method).to.be.equal('DELETE');
+      expect(options).to.not.have.property('body');
+      expect(options.method).to.be.equal('DELETE');
+    }, output);
+
+    const data = await users(config).me.subscriptions.remove(params);
+    expect(data).to.have.property('result', 'success');
   });
 
   it('should create a new user', async () => {
@@ -119,37 +117,39 @@ describe('Users', () => {
       full_name: 'New User',
       short_name: 'newbie',
     };
-    const validator = (url, options) => {
-      url.should.equal(`${common.config.apiURL}/users`);
-      options.should.have.property('body');
-      options.method.should.be.equal('POST');
-      Object.keys(options.body.data).length.should.equal(4);
-      options.body.data.email.should.equal(params.email);
-      options.body.data.password.should.equal(params.password);
-      options.body.data.full_name.should.equal(params.full_name);
-      options.body.data.short_name.should.equal(params.short_name);
-    };
     const output = {
       result: 'success',
       msg: '',
     };
-    common.stubNetwork(validator, output);
-    const data = await users(common.config).create(params);
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.equal(`${config.apiURL}/users`);
+      expect(options).to.have.property('body');
+      expect(options.method).to.be.equal('POST');
+
+      const body = bodyToRecord(options.body);
+      expect(Object.keys(body).length).to.equal(4);
+      expect(body.email).to.equal(params.email);
+      expect(body.password).to.equal(params.password);
+      expect(body.full_name).to.equal(params.full_name);
+      expect(body.short_name).to.equal(params.short_name);
+    }, output);
+
+    const data = await users(config).create(params);
+    expect(data).to.have.property('result', 'success');
   });
 
   it('should fetch users alert words', async () => {
-    const validator = (url, options) => {
-      url.should.equal(`${common.config.apiURL}/users/me/alert_words`);
-      options.should.not.have.property('body');
-      options.method.should.be.equal('GET');
-    };
     const output = {
       result: 'success',
       msg: '',
     };
-    common.stubNetwork(validator, output);
-    const data = await users(common.config).me.alertWords.retrieve();
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.equal(`${config.apiURL}/users/me/alert_words`);
+      expect(options).to.not.have.property('body');
+      expect(options.method).to.be.equal('GET');
+    }, output);
+
+    const data = await users(config).me.alertWords.retrieve();
+    expect(data).to.have.property('result', 'success');
   });
 });

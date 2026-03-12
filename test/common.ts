@@ -38,7 +38,7 @@ afterEach(() => {
 
 export function bodyToRecord(b: BodyInit | null | undefined) {
   if (b instanceof URLSearchParams) return Object.fromEntries(b);
-  if (b instanceof FormData) return Object.fromEntries(b.entries());
+  // if (b instanceof FormData) return Object.fromEntries(b.entries());
   return {};
 }
 

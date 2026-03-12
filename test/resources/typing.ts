@@ -1,22 +1,12 @@
-const chai = require('chai');
-const typing = require('../../lib/resources/typing');
-const common = require('../common');
-
-chai.should();
+import { expect } from 'chai';
+import typing from '../../lib/resources/typing';
+import { bodyToRecord, config, stubNetwork } from '../common';
 
 describe('Typing', () => {
   it('Should send typing started notification', async () => {
     const params = {
-      to: 'othello@zulip.com',
-      op: 'start',
-    };
-    const validator = (url, options) => {
-      url.should.equal(`${common.config.apiURL}/typing`);
-      options.method.should.be.equal('POST');
-      Object.keys(options.body.data).length.should.equal(2);
-      options.body.data.op.should.equal(params.op);
-      // The email comes JSON-encoded (i.e. enclosed in double quotes)
-      JSON.parse(options.body.data.to).should.equal(params.to);
+      to: [72],
+      op: 'start' as const,
     };
     const output = {
       events: [
@@ -32,23 +22,24 @@ describe('Typing', () => {
       msg: '',
       handler_id: 225,
     };
-    common.stubNetwork(validator, output);
-    const data = await typing(common.config).send(params);
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.equal(`${config.apiURL}/typing`);
+      expect(options.method).to.be.equal('POST');
+
+      const body = bodyToRecord(options.body);
+      expect(Object.keys(body).length).to.equal(2);
+      expect(body.op).to.equal(params.op);
+      expect(JSON.parse(body.to)).to.deep.equal(params.to);
+    }, output);
+
+    const data = await typing(config).send(params);
+    expect(data).to.have.property('result', 'success');
   });
 
   it('Should send typing stopped notification', async () => {
     const params = {
-      to: 'othello@zulip.com',
-      op: 'stop',
-    };
-    const validator = (url, options) => {
-      url.should.equal(`${common.config.apiURL}/typing`);
-      options.method.should.be.equal('POST');
-      Object.keys(options.body.data).length.should.equal(2);
-      options.body.data.op.should.equal(params.op);
-      // The email comes JSON-encoded (i.e. enclosed in double quotes)
-      JSON.parse(options.body.data.to).should.equal(params.to);
+      to: [72],
+      op: 'stop' as const,
     };
     const output = {
       events: [
@@ -64,8 +55,17 @@ describe('Typing', () => {
       msg: '',
       handler_id: 286,
     };
-    common.stubNetwork(validator, output);
-    const data = await typing(common.config).send(params);
-    data.should.have.property('result', 'success');
+    stubNetwork((url, options) => {
+      expect(url).to.equal(`${config.apiURL}/typing`);
+      expect(options.method).to.be.equal('POST');
+
+      const body = bodyToRecord(options.body);
+      expect(Object.keys(body).length).to.equal(2);
+      expect(body.op).to.equal(params.op);
+      expect(JSON.parse(body.to)).to.deep.equal(params.to);
+    }, output);
+
+    const data = await typing(config).send(params);
+    expect(data).to.have.property('result', 'success');
   });
 });
