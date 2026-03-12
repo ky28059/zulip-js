@@ -1,6 +1,7 @@
 import type { ZulipRC } from '../zuliprc';
 import api from '../api';
 
+// {@Link https://zulip.com/api/set-typing-status}
 export interface TypingParams {
   type?: 'direct' | 'stream' | 'channel',
   op: 'start' | 'stop',

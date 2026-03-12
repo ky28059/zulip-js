@@ -24,21 +24,19 @@ export default async function api<T extends object>(
   const auth = Buffer.from(`${config.username}:${config.apiKey}`).toString('base64');
   const options: RequestInit = { method, headers: { Authorization: `Basic ${auth}` } };
 
-  if (method === 'POST' || method === 'PATCH') {
-    options.body = new FormData();
-    Object.keys(params!).forEach((key) => {
-      let data = params![key];
-      if (Array.isArray(data)) {
-        data = JSON.stringify(data);
-      }
-      (options.body as FormData).append(key, data);
-    });
-  } else if (params) {
+  if (params) {
+    const search = method === 'POST' || method === 'PATCH'
+      ? options.body = new URLSearchParams()
+      : url.searchParams;
+
     Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.append(key, value);
+      const data = Array.isArray(value) ? JSON.stringify(value) : value;
+      search.append(key, data);
     });
   }
+
   const response = await fetch(url, options);
+
   try {
     return await response.json();
   } catch (e) {
