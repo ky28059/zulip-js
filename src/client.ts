@@ -14,6 +14,7 @@ import typing from './resources/typing';
 import reactions from './resources/reactions';
 import server from './resources/server';
 import linkifiers from './resources/linkifiers';
+import invites from './resources/invites';
 import eventsWrapper from './events_wrapper';
 
 function getCallEndpoint(config: ZulipRC) {
@@ -45,6 +46,7 @@ function resources(config: ZulipRC) {
     reactions: reactions(config),
     server: server(config),
     linkifiers: linkifiers(config),
+    invites: invites(config),
     callOnEachEvent: eventsWrapper(config),
   };
 }
