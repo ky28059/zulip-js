@@ -58,7 +58,7 @@ export interface RevokeMultiuseInviteParams {
 
 export default function invites(config: ZulipRC) {
   return {
-    get: () => {
+    retrieve: () => {
       return api<GetInvitesResponse>('/invites', config, 'GET');
     },
     send: (params: SendInvitesParams) => {
