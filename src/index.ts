@@ -1,7 +1,7 @@
 export type { Attachment } from './types/attachments';
 export type { Draft } from './types/drafts';
 export type {} from './types/events';
-export type { GroupSettingValue } from './types/groups';
+export type { GroupSettingValue, GroupSettingUpdate, UserGroup } from './types/groups';
 export type { Message, MessageFlag } from './types/messages';
 export type { ReactionType } from './types/reactions';
 export type { Stream, StreamTopic, StreamPostPolicy, Subscription } from './types/streams';
@@ -28,6 +28,22 @@ export type {
   RevokeInviteParams,
   RevokeMultiuseInviteParams,
 } from './resources/invites';
+export type {
+  GetUserGroupsParams,
+  GetUserGroupsResponse,
+  CreateUserGroupParams,
+  CreateUserGroupResponse,
+  UpdateUserGroupParams,
+  DeactivateUserGroupParams,
+  GetUserGroupMembersParams,
+  GetUserGroupMembersResponse,
+  UpdateUserGroupMembersParams,
+  CheckUserGroupMemberParams,
+  CheckUserGroupMemberResponse,
+  GetUserGroupSubgroupsParams,
+  GetUserGroupSubgroupsResponse,
+  UpdateUserGroupSubgroupsParams,
+} from './resources/groups';
 export type {
   GetMessagesParams,
   GetMessagesResponse,
