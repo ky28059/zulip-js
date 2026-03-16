@@ -71,6 +71,24 @@ export interface GetAlertWordsResponse {
   alert_words: string[]
 }
 
+// {@Link https://zulip.com/api/add-alert-words}
+export interface AddAlertWordsParams {
+  alert_words: string[]
+}
+
+export interface AddAlertWordsResponse {
+  alert_words: string[]
+}
+
+// {@Link https://zulip.com/api/remove-alert-words}
+export interface RemoveAlertWordsParams {
+  alert_words: string[]
+}
+
+export interface RemoveAlertWordsResponse {
+  alert_words: string[]
+}
+
 export default function users(config: ZulipRC) {
   return {
     retrieve: (params?: GetUsersParams) => {
@@ -94,6 +112,12 @@ export default function users(config: ZulipRC) {
       alertWords: {
         retrieve: () => {
           return api<GetAlertWordsResponse>('/users/me/alert_words', config, 'GET');
+        },
+        add: (params: AddAlertWordsParams) => {
+          return api<AddAlertWordsResponse>('/users/me/alert_words', config, 'POST', params);
+        },
+        remove: (params: RemoveAlertWordsParams) => {
+          return api<RemoveAlertWordsResponse>('/users/me/alert_words', config, 'DELETE', params);
         },
       },
     },

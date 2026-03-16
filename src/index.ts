@@ -46,6 +46,21 @@ export type {
   UpdateMessageFlagsParams,
   UpdateMessageFlagsResponse,
 } from './resources/messages';
+export type {
+  GetUsersParams,
+  GetUsersResponse,
+  CreateUserParams,
+  CreateUserResponse,
+  AddSubscriptionParams,
+  AddSubscriptionResponse,
+  RemoveSubscriptionParams,
+  RemoveSubscriptionResponse,
+  GetAlertWordsResponse,
+  AddAlertWordsParams,
+  AddAlertWordsResponse,
+  RemoveAlertWordsParams,
+  RemoveAlertWordsResponse,
+} from './resources/users';
 
 import zulip from './client';
 export default zulip;
