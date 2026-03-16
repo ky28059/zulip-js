@@ -1,6 +1,6 @@
 {
   "name": "@ky28059/zulip-js",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Javascript library to access the Zulip API",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
